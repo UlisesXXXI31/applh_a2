@@ -211,7 +211,7 @@ app.get('/api/seed-lessons', async (req, res) => {
                 title: "Lección 1",
                 readings: [
                     {
-                        t{
+                        
     text: "1.- Die Lehrerinnen...",
     options: [
       "geben keine Hausaufgaben auf.",
