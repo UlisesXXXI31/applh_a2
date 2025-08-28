@@ -6,7 +6,7 @@ const Lesson = require('../models/lesson.model.js'); // Importa el nuevo modelo
 
 // Aquí va la URL de conexión a tu base de datos MongoDB.
 // Reemplaza <nombre-de-tu-base-de-datos> con el nombre que quieras darle.
-const uri = 'mongodb://127.0.0.1:27017/vocabulario-app';
+const uri = 'mongodb://127.0.0.1:27017/deutsch_lesen_hoeren';
 
 mongoose.connect(uri)
   .then(() => console.log('Conexión exitosa a MongoDB'))
@@ -214,7 +214,11 @@ app.get('/api/seed-lessons', async (req, res) => {
                         title: "Teil 1",
                         text: `Du liest in einer Zeitung...`,
                         questions: [
-                            { text: "1.- Die Lehrerinnen...", options: [...], correctAnswer: "..." },
+                            { text: "1.- Die Lehrerinnen...", 
+                             
+                             options: //[...],
+                              
+                              correctAnswer: "..." },
                             // ... más preguntas
                         ]
                     },
@@ -226,7 +230,10 @@ app.get('/api/seed-lessons', async (req, res) => {
                         audioUrl: "/audio/leccion1/teil1.mp3", // O la URL de Cloudinary
                         instructions: "Du hörst fünf...",
                         questions: [
-                            { text: "1.- Welche Auskunft...", options: [...], correctAnswer: "..." }
+                            { text: "1.- Welche Auskunft...", 
+                             options: // [...], 
+                              
+                               correctAnswer: "..." }
                         ]
                     },
                     {
