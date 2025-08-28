@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors'); // <-- ¡Esta es la nueva línea!
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs'); // ¡Nueva línea!
+const Lesson = require('../models/lesson.model.js'); // Importa el nuevo modelo
 
 // Aquí va la URL de conexión a tu base de datos MongoDB.
 // Reemplaza <nombre-de-tu-base-de-datos> con el nombre que quieras darle.
@@ -199,4 +200,63 @@ app.get('/api/progress/:userId', async (req, res) => {
     console.error('Error al obtener el progreso del usuario:', error);
     res.status(500).json({ message: 'Error interno del servidor.' });
   }
+});
+app.get('/api/seed-lessons', async (req, res) => {
+    try {
+        // Aquí pegarías el contenido de tu array `datosLecciones`
+        const leccionesParaGuardar = [
+            {
+                level: "A2", // O el nivel que corresponda
+                lessonNumber: 1,
+                title: "Lección 1",
+                readings: [
+                    {
+                        title: "Teil 1",
+                        text: `Du liest in einer Zeitung...`,
+                        questions: [
+                            { text: "1.- Die Lehrerinnen...", options: [...], correctAnswer: "..." },
+                            // ... más preguntas
+                        ]
+                    },
+                    // ... más partes de Lesen
+                ],
+                listenings: [
+                    {
+                        title: "Hören Teil 1",
+                        audioUrl: "/audio/leccion1/teil1.mp3", // O la URL de Cloudinary
+                        instructions: "Du hörst fünf...",
+                        questions: [
+                            { text: "1.- Welche Auskunft...", options: [...], correctAnswer: "..." }
+                        ]
+                    },
+                    {
+                        title: "Hören Teil 2",
+                        audioUrl: "/audio/leccion1/teil2.mp3",
+                        instructions: "Du hörst ein Gespräch...",
+                        example: "Beispiel 0: Anna → Pizza",
+                        dragDropOptions: [
+                            { id: "a", text: "Flasche Wasser" },
+                            // ... más opciones
+                        ],
+                        dragDropAnswers: [
+                            { person: "Jonas", solution: "Brötchen" },
+                            // ... más respuestas
+                        ]
+                    }
+                    // ... más partes de Hören
+                ]
+            }
+            // ... más lecciones
+        ];
+
+        // Borra las lecciones existentes para evitar duplicados
+        await Lesson.deleteMany({});
+        // Inserta las nuevas lecciones
+        await Lesson.insertMany(leccionesParaGuardar);
+
+        res.status(200).json({ message: '¡Lecciones guardadas en la base de datos con éxito!' });
+
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
 });
