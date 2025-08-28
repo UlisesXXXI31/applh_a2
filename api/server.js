@@ -229,9 +229,11 @@ app.get('/api/seed-lessons', async (req, res) => {
                         instructions: "Du hörst fünf...",
                         questions: [
                             { text: "1.- Welche Auskunft...", 
-                             options: // [...] 
+                             options: [
+                               
+                             ] ,
                               
-                             ,  correctAnswer: "..." }
+                               correctAnswer: "..." }
                         ]
                     },
                     {
