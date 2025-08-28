@@ -211,17 +211,15 @@ app.get('/api/seed-lessons', async (req, res) => {
                 title: "Lección 1",
                 readings: [
                     {
-                        title: "Teil 1",
-                        text: `Du liest in einer Zeitung...`,
-                        questions: [
-                            { text: "1.- Die Lehrerinnen...", 
-                             
-                             options: //[...],
-                              
-                              correctAnswer: "..." },
-                            // ... más preguntas
-                        ]
-                    },
+                        t{
+    text: "1.- Die Lehrerinnen...",
+    options: [
+      "geben keine Hausaufgaben auf.",
+      "sind sehr jung und neu im Beruf.",
+      "sprechen alle mindestens drei Sprachen."
+    ], // <-- Con coma aquí
+    correctAnswer: "geben keine Hausaufgaben auf."
+}
                     // ... más partes de Lesen
                 ],
                 listenings: [
@@ -231,9 +229,9 @@ app.get('/api/seed-lessons', async (req, res) => {
                         instructions: "Du hörst fünf...",
                         questions: [
                             { text: "1.- Welche Auskunft...", 
-                             options: // [...], 
+                             options: // [...] 
                               
-                               correctAnswer: "..." }
+                             ,  correctAnswer: "..." }
                         ]
                     },
                     {
