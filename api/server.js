@@ -34,30 +34,7 @@ app.get('/', (req, res) => {
 // --- Rutas de Lecciones ---
 app.get('/api/lessons', async (req, res) => {
     try {
-
-          // --- AÑADE ESTA SECCIÓN PARA CREAR EL PROFESOR ---
-        console.log("Creando/verificando usuario profesor de prueba...");
-        const teacherEmail = 'teacher.test@europaschool.org';
-        
-        // Buscamos si ya existe para no crearlo dos veces
-        let teacher = await User.findOne({ email: teacherEmail });
-
-        if (!teacher) {
-            const salt = await bcrypt.genSalt(10);
-            const hashedPassword = await bcrypt.hash('teacher123', salt);
-            teacher = new User({
-                name: 'Profesor de Prueba',
-                email: teacherEmail,
-                password: hashedPassword,
-                role: 'teacher'
-            });
-            await teacher.save();
-            console.log("Profesor de prueba creado con éxito.");
-        } else {
-            console.log("El profesor de prueba ya existía.");
-        }
-        // --- FIN DE LA SECCIÓN ---
-      //Cramos las lecciones
+      
         const { level } = req.query;
         if (!level) return res.status(400).json({ message: 'El nivel es requerido' });
         const lessons = await Lesson.find({ level: level }).sort({ lessonNumber: 1 }).select('title lessonNumber');
@@ -181,6 +158,30 @@ app.get('/api/progress/:userId', async (req, res) => {
 // --- Ruta para Poblar la Base de Datos (Seed) ---
 app.get('/api/seed-lessons', async (req, res) => {
     try {
+        // --- AÑADE ESTA SECCIÓN PARA CREAR EL PROFESOR ---
+        console.log("Creando/verificando usuario profesor de prueba...");
+        const teacherEmail = 'teacher.test@europaschool.org';
+        
+        // Buscamos si ya existe para no crearlo dos veces
+        let teacher = await User.findOne({ email: teacherEmail });
+
+        if (!teacher) {
+            const salt = await bcrypt.genSalt(10);
+            const hashedPassword = await bcrypt.hash('teacher123', salt);
+            teacher = new User({
+                name: 'Profesor de Prueba',
+                email: teacherEmail,
+                password: hashedPassword,
+                role: 'teacher'
+            });
+            await teacher.save();
+            console.log("Profesor de prueba creado con éxito.");
+        } else {
+            console.log("El profesor de prueba ya existía.");
+        }
+
+      //----FIN DE BLOQUE---//
+      
         const leccionesParaGuardar = [
             // PEGA AQUÍ EL ARRAY COMPLETO DE TUS LECCIONES,
             // ASEGURÁNDOTE DE QUE LA SINTAXIS ES CORRECTA
