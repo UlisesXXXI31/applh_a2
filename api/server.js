@@ -188,7 +188,7 @@ app.get('/api/seed-lessons', async (req, res) => {
 
         await Lesson.deleteMany({});
         await Lesson.insertMany(leccionesParaGuardar);
-        res.status(200).json({ message: '¡Lecciones de prueba guardadas con éxito!' });
+        res.status(200).json({ message: '¡Datos de prueba (profesor y lecciones) creados con éxito!' });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
