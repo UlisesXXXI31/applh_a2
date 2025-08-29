@@ -43,6 +43,9 @@ LessonSchema.index({ level: 1, lessonNumber: 1 }, { unique: true });
 
 // Compilar el modelo a partir del schema
 const Lesson = mongoose.model('Lesson', LessonSchema);
+module.exports = mongoose.model('User', userSchema);
 
 // Exportar el modelo compilado. ESTA ES LA LÍNEA MÁS IMPORTANTE.
 module.exports = Lesson;
+module.exports = User;
+
