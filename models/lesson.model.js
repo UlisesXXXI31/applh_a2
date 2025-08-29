@@ -1,51 +1,48 @@
-// backend/models/lesson.model.js (VERSIÓN FINAL Y CORREGIDA)
+// backend/models/user.js (VERSIÓN CORREGIDA)
 
 const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
 const Schema = mongoose.Schema;
 
-// --- Sub-documentos (estructuras internas) ---
-
-const QuestionSchema = new Schema({
-    text: { type: String, required: true },
-    options: [{ type: String, required: true }],
-    correctAnswer: { type: String, required: true }
-}, { _id: false });
-
-const ReadingPartSchema = new Schema({
-    title: { type: String, required: true },
-    text: { type: String, required: true },
-    instructions: { type: String },
-    questions: [QuestionSchema]
-}, { _id: false });
-
-const ListeningPartSchema = new Schema({
-    title: { type: String, required: true },
-    audioUrl: { type: String, required: true },
-    instructions: { type: String },
-    example: { type: String },
-    questions: [QuestionSchema]
-    // Si necesitas la actividad de arrastrar, la añadimos aquí después
-}, { _id: false });
-
-
-// --- El Schema principal de la Lección ---
-
-const LessonSchema = new Schema({
-    level: { type: String, required: true, enum: ['A1', 'A2', 'B1'] },
-    lessonNumber: { type: Number, required: true },
-    title: { type: String, required: true },
-    readings: [ReadingPartSchema],
-    listenings: [ListeningPartSchema]
+const userSchema = new Schema({
+    name: {
+        type: String,
+        required: true
+    },
+    email: {
+        type: String,
+        required: true,
+        unique: true, // Asegura que no haya dos usuarios con el mismo email
+        lowercase: true
+    },
+    password: {
+        type: String,
+        required: true
+    },
+    role: {
+        type: String,
+        enum: ['student', 'teacher'], // Solo permite estos dos roles
+        required: true
+    }
 });
 
-// Crear un índice para buscar lecciones eficientemente
-LessonSchema.index({ level: 1, lessonNumber: 1 }, { unique: true });
+// Middleware para hashear la contraseña automáticamente antes de guardarla
+// (Esto es opcional pero muy buena práctica, así no tienes que hashearla en cada ruta)
+userSchema.pre('save', async function(next) {
+    if (!this.isModified('password')) {
+        return next();
+    }
+    try {
+        const salt = await bcrypt.genSalt(10);
+        this.password = await bcrypt.hash(this.password, salt);
+        next();
+    } catch (error) {
+        next(error);
+    }
+});
 
-// Compilar el modelo a partir del schema
-const Lesson = mongoose.model('Lesson', LessonSchema);
-module.exports = mongoose.model('User', userSchema);
+// Compilar el modelo
+const User = mongoose.model('User', userSchema);
 
-// Exportar el modelo compilado. ESTA ES LA LÍNEA MÁS IMPORTANTE.
-module.exports = Lesson;
+// Exportar el modelo
 module.exports = User;
-
