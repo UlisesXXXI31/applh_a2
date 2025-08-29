@@ -10,6 +10,7 @@ const bcrypt = require('bcryptjs');
 const User = require('../models/user');
 const Progress = require('../models/progress');
 const Lesson = require('../models/lesson.model.js');
+console.log("El modelo Lesson importado es:", Lesson);
 
 // --- Creación de la App y Middlewares ---
 const app = express();
