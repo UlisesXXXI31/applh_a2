@@ -1,4 +1,4 @@
-// backend/models/user.js (VERSIÓN FINAL, ÚNICA Y CORRECTA)
+// backend/models/user.js
 
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
@@ -13,7 +13,8 @@ const userSchema = new Schema({
         type: String,
         required: true,
         unique: true,
-        lowercase: true
+        lowercase: true,
+        trim: true
     },
     password: {
         type: String,
@@ -26,8 +27,9 @@ const userSchema = new Schema({
     }
 });
 
-// Middleware para hashear la contraseña automáticamente
+// Middleware para hashear la contraseña automáticamente antes de guardarla
 userSchema.pre('save', async function(next) {
+    // Solo hashea la contraseña si ha sido modificada (o es nueva)
     if (!this.isModified('password')) {
         return next();
     }
@@ -40,5 +42,5 @@ userSchema.pre('save', async function(next) {
     }
 });
 
-// Exportar usando el patrón singleton para evitar errores en Vercel
+// Exportar usando el patrón "singleton" para evitar errores en Vercel
 module.exports = mongoose.models.User || mongoose.model('User', userSchema);
