@@ -1,13 +1,15 @@
+// backend/models/progress.js
+
 const mongoose = require('mongoose');
-const { Schema } = mongoose;
+const Schema = mongoose.Schema;
 
 const progressSchema = new Schema({
   user: {
     type: Schema.Types.ObjectId,
-    ref: 'User',
+    ref: 'User', // Referencia al modelo 'User' por su nombre
     required: true
   },
-  LessonName: {
+  lessonName: { // 'N' mayúscula para consistencia
     type: String,
     required: true
   },
@@ -29,5 +31,5 @@ const progressSchema = new Schema({
   }
 });
 
+// Exportar usando el patrón "singleton"
 module.exports = mongoose.models.Progress || mongoose.model('Progress', progressSchema);
-
