@@ -1,48 +1,44 @@
-// backend/models/user.js (VERSIÓN CORREGIDA)
+// backend/models/lesson.model.js
 
 const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs');
 const Schema = mongoose.Schema;
 
-const userSchema = new Schema({
-    name: {
-        type: String,
-        required: true
-    },
-    email: {
-        type: String,
-        required: true,
-        unique: true, // Asegura que no haya dos usuarios con el mismo email
-        lowercase: true
-    },
-    password: {
-        type: String,
-        required: true
-    },
-    role: {
-        type: String,
-        enum: ['student', 'teacher'], // Solo permite estos dos roles
-        required: true
-    }
+// --- Sub-schemas para las partes internas de la lección ---
+
+const QuestionSchema = new Schema({
+    text: { type: String, required: true },
+    options: [{ type: String, required: true }],
+    correctAnswer: { type: String, required: true }
+}, { _id: false });
+
+const ReadingPartSchema = new Schema({
+    title: { type: String, required: true },
+    text: { type: String, required: true },
+    instructions: { type: String },
+    questions: [QuestionSchema]
+}, { _id: false });
+
+const ListeningPartSchema = new Schema({
+    title: { type: String, required: true },
+    audioUrl: { type: String, required: true },
+    instructions: { type: String },
+    example: { type: String },
+    questions: [QuestionSchema]
+    // Aquí puedes añadir los schemas para la actividad de arrastrar si la necesitas
+}, { _id: false });
+
+
+// --- El Schema principal de la Lección ---
+
+const LessonSchema = new Schema({
+    level: { type: String, required: true, enum: ['A1', 'A2', 'B1'] },
+    lessonNumber: { type: Number, required: true },
+    title: { type: String, required: true },
+    readings: [ReadingPartSchema],
+    listenings: [ListeningPartSchema]
 });
 
-// Middleware para hashear la contraseña automáticamente antes de guardarla
-// (Esto es opcional pero muy buena práctica, así no tienes que hashearla en cada ruta)
-userSchema.pre('save', async function(next) {
-    if (!this.isModified('password')) {
-        return next();
-    }
-    try {
-        const salt = await bcrypt.genSalt(10);
-        this.password = await bcrypt.hash(this.password, salt);
-        next();
-    } catch (error) {
-        next(error);
-    }
-});
+LessonSchema.index({ level: 1, lessonNumber: 1 }, { unique: true });
 
-// Compilar el modelo
-const User = mongoose.model('User', userSchema);
-
-// Exportar el modelo
-module.exports = User;
+// Exportar usando el patrón "singleton"
+module.exports = mongoose.models.Lesson || mongoose.model('Lesson', LessonSchema);
